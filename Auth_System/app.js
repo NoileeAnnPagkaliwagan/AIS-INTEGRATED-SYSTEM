@@ -1,35 +1,43 @@
 import express from "express";
-import 'dotenv/config.js';
 import cors from "cors";
-import UserRoutes from "./routes/UserRoutes.js";
+import 'dotenv/config.js';
 
-//create express app
+
+import authRoutes from "./routes/userRoutes.js";
+
 const app = express();
 
-//ENABLE CORS TO FRONTEND
-let corsOptions = {
-    origin: process.env.ORIGIN
-}
+const PORT = Number(process.env.PORT) || 3000;
 
-//middleware
+const corsOptions = {
+    origin: process.env.ORIGIN || "*" 
+};
+
 app.use(express.json());
+
 app.use(cors(corsOptions));
 
-
-app.use((req, res, next) =>{
-    console.log(req.path, req.method);
+// Logger middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} request to: ${req.path}`);
     next();
-})
+});
 
-const port = 3000;
 
-try{
-    app.listen(process.env.PORT || 3000, ()=>{
-        console.log(`Listening to port ${process.env.PORT || 3000}...`);
+app.use('/user', authRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', authRoutes);
+
+
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Auth service is running',
+        port: PORT
     });
-}catch(e){
-    console.log(e);
-}
+});
 
 
-app.use('/user', UserRoutes);
+app.listen(PORT, () => {
+    console.log(`Server is live on port ${PORT}`);
+});

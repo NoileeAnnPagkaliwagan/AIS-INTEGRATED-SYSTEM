@@ -1,13 +1,11 @@
 import express from "express";
-import 'dotenv/config.js';
+import 'dotenv/config';
 
-import authRoutes from "./routes/authRoute.js";
+import authRoute from "./routes/authRoute.js";
 
-//create express app
+
 const app = express();
 
-
-//middleware
 app.use(express.json());
 
 
@@ -16,15 +14,15 @@ app.use((req, res, next) => {
     next();
 })
 
-const port = 3000;
+const port = 5000;
 
 try {
-    app.listen(process.env.PORT || 3000, () => {
-        console.log(`Listening to port ${process.env.PORT || 3000}...`);
+    app.listen(process.env.PORT || 5000, () => {
+        console.log(`Listening to port ${process.env.PORT || 5000}...`);
     });
 } catch (e) {
     console.log(e);
 }
 
 
-app.use('/auth', authRoutes);
+app.use('/auth', authRoute);
